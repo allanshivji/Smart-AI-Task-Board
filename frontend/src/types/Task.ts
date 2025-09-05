@@ -12,12 +12,8 @@ export interface Task {
     priority: 'low' | 'medium' | 'high';
     estimatedHours: number;
     reasoning: string;
+    tags: string[];  // ← Add this line
   };
   createdAt: string;
   updatedAt: string;
-}
-
-export interface TasksData {
-  tasks: Task[];
-  lastId: number;
 }

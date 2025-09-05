@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Alert, Spinner, Button, Badge } from 'reactstrap';
+import { Container, Alert, Spinner, Button } from 'reactstrap';
 import { TaskForm } from './components/TaskForm';
 import { TaskList } from './components/TaskList';
+import { AIInsights } from './components/AIInsights';
 import { Task } from './types/Task';
 
 function App() {
@@ -61,11 +62,12 @@ function App() {
       <div className="text-center mb-4">
         <h1 className="display-4">🤖 Smart Task Board</h1>
         <p className="lead text-muted">
-          AI-powered task management <Badge color="secondary">AI features coming soon!</Badge>
+          AI-powered task management with intelligent insights
         </p>
       </div>
 
       <TaskForm onTaskCreated={fetchTasks} />
+      <AIInsights />
       <TaskList tasks={tasks} />
     </Container>
   );
