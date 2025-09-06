@@ -67,7 +67,7 @@ export const analyzeTask = async (title: string, description: string): Promise<A
     const response = await result.response;
     const text = response.text();
     
-    console.log('🤖 Raw AI response:', text);
+    console.log('🤖 Raw AI response received');
     
     // Parse the response with our robust parser
     const analysis = parseAIResponse(text);
@@ -77,7 +77,7 @@ export const analyzeTask = async (title: string, description: string): Promise<A
       throw new Error('Missing required fields in AI response');
     }
     
-    console.log('✅ Parsed AI analysis:', analysis);
+    console.log('✅ Parsed AI analysis');
     return analysis;
   } catch (error) {
     console.error('AI analysis failed:', error);
@@ -128,7 +128,7 @@ export const generateInsights = async (tasks: any[]): Promise<string[]> => {
     const response = await result.response;
     const text = response.text();
     
-    console.log('🤖 Raw insights response:', text);
+    console.log('🤖 Raw insights response received');
     
     const insights = parseAIResponse(text);
     return Array.isArray(insights) ? insights : ['AI insights temporarily unavailable'];

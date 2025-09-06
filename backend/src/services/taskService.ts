@@ -58,7 +58,7 @@ export const createTask = async (taskData: Omit<Task, 'id' | 'createdAt' | 'upda
 
     await fs.writeFile(TASKS_FILE, JSON.stringify(tasksData, null, 2));
     
-    console.log('✅ Task created with AI analysis:', aiAnalysis);
+    console.log('✅ Task created with AI analysis');
     return newTask;
   } catch (error) {
     console.error('Error creating task:', error);
