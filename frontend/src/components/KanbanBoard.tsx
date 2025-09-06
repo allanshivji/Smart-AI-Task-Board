@@ -84,20 +84,33 @@ export const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks, onTaskUpdate })
             <Col md="4" key={status}>
               <Card className="mb-4 h-100 shadow-sm">
                 <CardHeader 
-                  className={`bg-${column.color} text-white`}
+                  className="text-white"
                   style={{
                     background: column.color === 'primary' 
                       ? 'linear-gradient(135deg, #007bff 0%, #0056b3 100%)'
                       : column.color === 'info'
                       ? 'linear-gradient(135deg, #17a2b8 0%, #117a8b 100%)'
-                      : 'linear-gradient(135deg, #28a745 0%, #1e7e34 100%)'
+                      : 'linear-gradient(135deg, #28a745 0%, #1e7e34 100%)',
+                    border: 'none'
                   }}
                 >
                   <div className="d-flex justify-content-between align-items-center">
-                    <h5 className="mb-0">{column.title}</h5>
-                    <Badge color="light" text="dark" pill>
+                    <h5 className="mb-0 text-white">{column.title}</h5>
+                    <span 
+                      className="badge rounded-pill"
+                      style={{
+                        backgroundColor: status === 'todo' ? '#fff' : status === 'doing' ? '#fff3cd' : '#d1e7dd',
+                        color: status === 'todo' ? '#0056b3' : status === 'doing' ? '#664d03' : '#0f5132',
+                        border: '1px solid rgba(255, 255, 255, 0.3)',
+                        padding: '0.5em 0.75em',
+                        fontSize: '0.875rem',
+                        fontWeight: '700',
+                        minWidth: '2rem',
+                        textAlign: 'center'
+                      }}
+                    >
                       {columnTasks.length}
-                    </Badge>
+                    </span>
                   </div>
                 </CardHeader>
                 <CardBody style={{ minHeight: '500px', padding: '1rem' }}>
