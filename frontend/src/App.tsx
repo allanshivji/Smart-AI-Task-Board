@@ -1,25 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Alert, Spinner, Button } from 'reactstrap';
+import { useState, useEffect } from 'react';
+import { Container, Alert, Spinner, Button, Nav, NavItem, NavLink } from 'reactstrap';
 import { TaskForm } from './components/TaskForm';
 import { TaskList } from './components/TaskList';
+import { KanbanBoard } from './components/KanbanBoard';
 import { AIInsights } from './components/AIInsights';
 import { Task } from './types/Task';
+import { api } from './services/api';
 
 function App() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [activeView, setActiveView] = useState<'kanban' | 'list'>('kanban');
 
   const fetchTasks = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:8080/api/tasks');
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch tasks');
-      }
-      
-      const data = await response.json();
+      const data = await api.getTasks();
       setTasks(data.tasks);
       setError(null);
     } catch (error) {
@@ -27,6 +24,16 @@ function App() {
       setError('Failed to load tasks. Make sure the backend server is running.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleTaskUpdate = async (taskId: string, updates: Partial<Task>) => {
+    try {
+      await api.updateTask(taskId, updates);
+      await fetchTasks(); // Refresh tasks
+    } catch (error) {
+      console.error('Error updating task:', error);
+      alert('Failed to update task');
     }
   };
 
@@ -58,7 +65,7 @@ function App() {
   }
 
   return (
-    <Container className="py-4">
+    <Container fluid className="py-4">
       <div className="text-center mb-4">
         <h1 className="display-4">🤖 Smart Task Board</h1>
         <p className="lead text-muted">
@@ -66,9 +73,39 @@ function App() {
         </p>
       </div>
 
-      <TaskForm onTaskCreated={fetchTasks} />
-      <AIInsights />
-      <TaskList tasks={tasks} />
+      <Container>
+        <TaskForm onTaskCreated={fetchTasks} />
+        <AIInsights />
+        
+        {/* View Toggle */}
+        <Nav pills className="mb-4">
+          <NavItem>
+            <NavLink 
+              active={activeView === 'kanban'}
+              onClick={() => setActiveView('kanban')}
+              style={{ cursor: 'pointer' }}
+            >
+              🔄 Kanban Board
+            </NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink 
+              active={activeView === 'list'}
+              onClick={() => setActiveView('list')}
+              style={{ cursor: 'pointer' }}
+            >
+              📋 List View
+            </NavLink>
+          </NavItem>
+        </Nav>
+
+        {/* Dynamic View */}
+        {activeView === 'kanban' ? (
+          <KanbanBoard tasks={tasks} onTaskUpdate={handleTaskUpdate} />
+        ) : (
+          <TaskList tasks={tasks} />
+        )}
+      </Container>
     </Container>
   );
 }
