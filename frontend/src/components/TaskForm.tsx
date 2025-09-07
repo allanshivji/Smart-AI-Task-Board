@@ -12,6 +12,7 @@ import {
   Row,
   Col
 } from 'reactstrap';
+import { api } from '../services/api';
 
 interface TaskFormProps {
   onTaskCreated: () => void;
@@ -35,27 +36,17 @@ export const TaskForm: React.FC<TaskFormProps> = ({ onTaskCreated }) => {
     setError(null);
     
     try {
-      const response = await fetch('http://localhost:8080/api/tasks', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          title: title.trim(),
-          description: description.trim(),
-        }),
+      await api.createTask({
+        title: title.trim(),
+        description: description.trim(),
       });
 
-      if (response.ok) {
-        setTitle('');
-        setDescription('');
-        onTaskCreated();
-      } else {
-        setError('Failed to create task');
-      }
+      setTitle('');
+      setDescription('');
+      onTaskCreated();
     } catch (error) {
       console.error('Error creating task:', error);
-      setError('Error creating task');
+      setError(error instanceof Error ? error.message : 'Error creating task');
     } finally {
       setLoading(false);
     }

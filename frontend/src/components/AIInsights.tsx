@@ -7,6 +7,7 @@ import {
   Spinner,
   Button
 } from 'reactstrap';
+import { api } from '../services/api';
 
 export const AIInsights: React.FC = () => {
   const [insights, setInsights] = useState<string[]>([]);
@@ -18,16 +19,10 @@ export const AIInsights: React.FC = () => {
     setError(null);
     
     try {
-      const response = await fetch('http://localhost:8080/api/tasks/insights');
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch insights');
-      }
-      
-      const data = await response.json();
+      const data = await api.getInsights();
       setInsights(data.insights);
     } catch (err) {
-      setError('Failed to load AI insights');
+      setError(err instanceof Error ? err.message : 'Failed to load AI insights');
       console.error('Error fetching insights:', err);
     } finally {
       setLoading(false);
